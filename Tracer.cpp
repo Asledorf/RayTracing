@@ -8,6 +8,7 @@ void Tracer::Trace(Image& img, Scene& scene, Camera& camera)
 	float aspectRatio = img.width() / (float)img.height();
 	for (size_t y = 0; y < img.height(); y++)
 	{
+		std::cout << y << ' ';
 		//height = 600
 		for (size_t x = 0; x < img.width(); x++)
 		{

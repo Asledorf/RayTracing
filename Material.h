@@ -27,3 +27,16 @@ public:
 	glm::vec3 m_albedo{ 0, 0, 0 }; 
 	float m_fuzz = 0; 
 };
+
+class Dieletric : public Material
+{
+public:
+	Dieletric(const glm::vec3& albedo, float index) : m_albedo{ albedo }, m_index{ index } {}
+	// Inherited via Material
+	virtual bool Scatter(const ray& r, const raycastHit& hit, glm::vec3& attenuation, ray& scattered) const override;
+
+private:
+	glm::vec3 m_albedo{ 1, 1, 1 };
+	float m_index{ 1 };
+
+};

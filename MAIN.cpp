@@ -25,8 +25,8 @@ int main(int, char**)
 	//lower paramaters = lower quality but faster rendering
 	const int width = 800;
 	const int height = 600;
-	const int samples = 3;
-	const int depth = 20;
+	const int samples = 1;
+	const int depth = 5;
 	const int objects = 10;
 
 
@@ -51,38 +51,39 @@ int main(int, char**)
 	Canvas canvas(renderer,width,height);
 	Image image(width,height);
 	// eye, lookat, up, fov, image
-	Camera camera{ glm::vec3{5, 5, 5}, glm::vec3{0, 0, 0}, glm::vec3{1, 1, 0}, 80.0f, &image };
+	Camera camera{ glm::vec3{0, 30, 0}, glm::vec3{0, 0, 0}, glm::vec3{1, 1, 0}, 80.0f, &image };
 	//Camera camera{ glm::vec3{0, 5, 5}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0}, 90.0f, &image };
 	Tracer tracer(samples, depth);
 	Scene scene;
 
+	Sphere* s;
 	for (size_t i = 0; i < objects; i++)
 	{
 		glm::vec3 color = glm::rgbColor(glm::vec3{ rand()%360, 1, 1 });
-		//glm::vec3 center = glm::vec3({10-(rand_dbl()*5)});
 		glm::vec3 center = glm::vec3({10-(rand_dbl()*5), 10 - (rand_dbl() * 5) , 10 - (rand_dbl() * 5) });
-		float radius = rand_dbl() * 3;
+		float radius = rand_dbl() * 100;
 		Material* m = nullptr;
 		switch (rand()%3)
 		{
-		case 1:
+		case 0:
 			m = new Lambertian{color};
 			break;	
-
-		case 2:
+	
+		case 1:
 			m = new Metal{color, 0.0f};
 			break;
-
-		case 3:
+		case 2:
+			m = new Dieletric{ color, 1.33f };
 			break;
 		}
-		scene.Add(new Sphere());
+		s = new Sphere(center, radius, m);
+		scene.Add(s);
 	}
 
-	scene.Add(new Sphere{	{ 2, 2, -4 },	1,			new Lambertian	{ { 1, 1, 0 } } });
-	scene.Add(new Sphere{	{ 0, 0, -6 },	2,			new Metal		{ { 0, 1, 1 }, 0.0f } });
-	scene.Add(new Sphere{	{0,-1.1,-3 },	0.5,		new Lambertian	{ { 1, 1, 0 } } });
-	//scene.Add(new Plane{	{0, -2, 0},		{0, 1, 0},	new Metal		{ { 0, 1, 1 }, 0.0f } });
+	//scene.Add(new Sphere{	{ 2, 2, -2 },	1,			new Lambertian	{ { 1, 1, 0 } } });
+	//scene.Add(new Sphere{	{ 1, 0, 2 },	0.75,		new Metal		{ { .8, .9, .7 }, 0.0f } });
+	//scene.Add(new Sphere{	{0,-1.1,-2 },	0.5,		new Dieletric	{ { 1, 1, 0 }, 1.33f } });
+	scene.Add(new Plane{	{0, -2, 0},		{0, 1, 0},	new Metal		{ { .6, .6, .6 }, 0.0f } });
 
 	image.Clear({ 0,0,0 });
 
@@ -91,7 +92,7 @@ int main(int, char**)
 	auto stop = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-	std::cout << "Duration (microseconds): " << duration.count() << '\n';
+	std::cout << "\nDuration (microseconds): " << duration.count() << '\n';
 	std::cout << "Samples: ............... " << samples << '\n';
 	std::cout << "Depth: ................. " << depth << '\n';
 
