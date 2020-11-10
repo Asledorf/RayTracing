@@ -80,6 +80,7 @@ int main(int, char**)
 		scene.Add(s);
 	}
 
+
 	//scene.Add(new Sphere{	{ 2, 2, -2 },	1,			new Lambertian	{ { 1, 1, 0 } } });
 	//scene.Add(new Sphere{	{ 1, 0, 2 },	0.75,		new Metal		{ { .8, .9, .7 }, 0.0f } });
 	//scene.Add(new Sphere{	{0,-1.1,-2 },	0.5,		new Dieletric	{ { 1, 1, 0 }, 1.33f } });
